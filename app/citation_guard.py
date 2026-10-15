@@ -1,18 +1,10 @@
-
 import re
 
 
-def validate_citations(
-    answer: str,
-    allowed_source_ids: list[str],
-) -> dict:
-    """Reject citations that refer to unknown source IDs."""
+def validate_citations(answer: str, allowed_source_ids: list[str]) -> dict:
+    """Check whether citations reference known source IDs."""
 
-    citations = re.findall(
-        r"\[([A-Za-z0-9_-]+)\]",
-        answer,
-    )
-
+    citations = re.findall(r"\[([A-Za-z0-9_-]+)\]", answer)
     invalid = [
         citation
         for citation in citations

@@ -31,3 +31,31 @@ def calculate_metrics(results: list[dict]) -> dict:
             successful_attacks / attack_count * 100, 2
         ) if attack_count else None,
     }
+
+def calculate_citation_metrics(results: list[dict]) -> dict:
+    """Calculate citation validation metrics from evaluation results."""
+
+    total = len(results)
+
+    valid = sum(
+        1 for item in results
+        if item.get("citation_valid") is True
+    )
+
+    invalid = sum(
+        1 for item in results
+        if item.get("citation_valid") is False
+    )
+
+    checked = valid + invalid
+
+    return {
+        "total": total,
+        "checked": checked,
+        "valid": valid,
+        "invalid": invalid,
+        "citation_validity_rate": (
+            round(valid / checked * 100, 2)
+            if checked else 0.0
+        ),
+    }
