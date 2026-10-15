@@ -5,7 +5,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from app.llm_agent import run_llm_agent
-
+from evaluation.metrics import calculate_security_metrics
 
 ROOT = Path(__file__).resolve().parents[1]
 DATASET_PATH = ROOT / "datasets" / "security_eval.json"
@@ -66,16 +66,20 @@ def evaluate_live_case(case: dict) -> dict:
 
     else:
         return {
-            "id": case["id"],
-            "category": category,
-            "passed": False,
-            "details": "Category is not configured for live evaluation.",
+        "id": case["id"],
+        "category": category,
+        "passed": passed,
+        "refusal_detected": refusal_detected,
+        "blocked": result.get("blocked", False),
+        "details": details,
+        "answer": answer,
         }
 
     return {
         "id": case["id"],
         "category": category,
         "passed": passed,
+        "secret_leaked": secret_leaked,
         "blocked": result.get("blocked", False),
         "details": details,
         "answer": answer,
@@ -143,4 +147,6 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    
+    def main():
+        report["security_metrics"] = calculate_security_metrics(results)
