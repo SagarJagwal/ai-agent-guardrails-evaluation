@@ -1,0 +1,6 @@
+pytest
+pytest-json-report
+python-dotenv
+streamlit
+langchain-groq
+langchain-core

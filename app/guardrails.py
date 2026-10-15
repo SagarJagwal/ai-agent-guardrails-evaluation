@@ -98,3 +98,24 @@ def detect_indirect_injection(document: str) -> bool:
 
     text = document.lower()
     return any(pattern in text for pattern in patterns)
+
+
+INJECTION_PATTERNS = [
+    r"ignore\s+(all\s+)?(previous|prior|system)\s+instructions",
+    r"disregard\s+(all\s+)?(previous|prior|system)\s+instructions",
+    r"reveal\s+(the\s+)?(api\s+key|secret|system\s+prompt)",
+    r"disclose\s+(the\s+)?(api\s+key|secret)",
+    r"exfiltrate\s+(the\s+)?(secret|credentials|api\s+key)",
+    r"print\s+(the\s+)?(system\s+prompt|api\s+key)",
+]
+
+
+def detect_indirect_injection(text: str) -> bool:
+    if not isinstance(text, str):
+        return False
+
+    return any(
+        re.search(pattern, text, flags=re.IGNORECASE)
+        for pattern in INJECTION_PATTERNS
+    )
+
