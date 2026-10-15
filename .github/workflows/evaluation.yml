@@ -23,12 +23,21 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install pytest pydantic pandas streamlit python-dotenv
+          pip install pytest pytest-json-report pydantic pandas streamlit python-dotenv
 
-      - name: Run automated tests
-        run: python -m pytest -v
+      - name: Run automated tests and export results
+        run: |
+          python -m pytest -v --json-report --json-report-file=reports/pytest_results.json
 
       - name: Generate evaluation report
         if: always()
         run: |
           python -m evaluation.evaluator
+
+      - name: Upload evaluation reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ai-agent-evaluation-report
+          path: reports/
+          if-no-files-found: warn
